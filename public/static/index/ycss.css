@@ -1,0 +1,99 @@
+.dl-block dl,.dl-block dt,.dl-block dd{
+    background:#fff5fa;
+    }
+.dl-block dl{
+    margin:0 auto;
+    width:95%;
+    border:1px solid #f8b3d0;
+    border-bottom:none;
+    }
+.dl-block dt,.dl-block dd{
+    padding:10px 0 10px 10px;
+    border-bottom:1px solid #f8b3d0;
+    overflow:hidden
+    }
+.dl-block dt{
+	font-size:14px;
+    font-weight:800;
+    background:#ff99cc;
+    color:#fff;
+	text-indent:1em;
+    }
+.dl-block dd{
+	line-height:15px;
+	font-size:13px;
+    }
+.dl-block dt span,.dl-block dd span{
+    display:block;
+    float:right;
+    border-left:1px solid #f8b3d0;
+    width:65px;
+    text-align:center;
+    }
+.dl-block dt span{
+	font-size:14px;
+	text-indent:0em;
+	}
+.dl-block dd span{
+	height:60px; 
+	line-height:60px;
+	font-size:13px;
+	}
+.dl-block .fff{
+    background:#fff
+    }
+.dl-block .eee{
+    background: #FFD0E8;
+    }
+.dl-block .bred{ 
+    font-weight:bold;
+    color:#F00;
+	font-size:13px;
+    }
+
+.dl-block02 dl,.dl-block02 dt,.dl-block02 dd{
+    margin:0;
+    background:#fff5fa;
+    font-size:14px;
+    }
+.dl-block02 dl{
+    margin:0 auto;
+    width:100%;
+    border:1px solid #f8b3d0;
+    border-bottom:none;
+    }
+.dl-block02 dt,.dl-block02 dd{
+    padding:0 0 0 10px;
+    border-bottom:1px solid #f8b3d0;
+    overflow:hidden
+    }
+.dl-block02 dt{
+	line-height:50px;
+    font-weight:800;
+    background:#ff99cc;
+    color:#fff;
+	height:50px;
+    }
+.dl-block02 dd{
+	line-height:30px;
+	font-size:13px;
+	height:30px;
+    }
+.dl-block02 dt span,.dl-block02 dd span{
+    display:block;
+    float:right;
+    border-left:1px solid #f8b3d0;
+    text-indent:0em;
+    width:60px;
+    text-align:center;
+    }
+.dl-block02 dt span{
+    font-size:14px;
+    }
+.dl-block02 dd span{
+    font-size:18px;
+	line-height:30px;
+    }
+.dl-block02 .fff{
+    background:#fff
+    }

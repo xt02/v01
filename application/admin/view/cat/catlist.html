@@ -1,0 +1,42 @@
+{layout name="public:layout" /}
+
+<h4 class="text-center text-success">课程目录管理</h4>
+
+<table class="table table-default table-hover text-center">
+    <tr>
+        <td>ID</td>
+        <td>栏目名称</td>
+        <td>排序</td>
+        <td>状态</td>
+        <td>创建时间</td>
+        <td colspan="2">操作</td>
+    </tr>
+    {volist name="catList" id="cat" empty="$empty"}
+    <tr>
+        <td>{$cat.id}</td>
+        <td><a href="{:url('chap/chapedit',['id'=>$cat.id])}">{$cat.name}</a></td>
+        <td>{$cat.sort}</td>
+        {eq name="$cat.status" value="1"}
+        <td style="color: forestgreen">显示</td>
+        {else/}
+        <td style="color: gray">隐藏</td>
+        {/eq}
+        <td>{$cat.create_time}</td>
+        <td><a href="{:url('cat/catedit',['id'=>$cat.id])}">编辑</a></td>
+        <td><a href="" onclick="dele();return false">删除</a></td>
+    </tr>
+    {/volist}
+
+</table>
+
+<a href="{:url('index/cateAdd')}" class="btn btn-info" role="button">添加分类</a>
+
+
+<script>//用户删除时删除的其实是最后一个
+function dele() {
+    if(confirm('您是真的要删除吗?')==true){
+        window.location.href = "{:url('cate/doDelete',['id'=>$cat.id])}"
+    }
+
+}
+</script>
