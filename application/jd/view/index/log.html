@@ -1,0 +1,195 @@
+{layout name="public:layout" /}
+
+<div class="row">
+    <div class="row">
+        <button class="btn btn-success" id="addlog">进货记录添加</button>
+    </div>
+
+    {volist name="logs" id="logs"}
+    <div>
+        <h4 class="text-center text-success">
+            <span>{$logs.type_name}</span>
+            &nbsp;&nbsp;入库&nbsp;&nbsp;<button class="btn btn-lg">{$logs.epecs}</button>片 ,
+            上次剩余&nbsp;&nbsp;<button class="btn btn-lg">{$logs.prev}</button>片
+            &nbsp;&nbsp;&nbsp; <button class="btn btn-success check_detail">查看详情</button>
+        </h4>
+        <div></div>
+    </div>
+    {/volist}
+
+
+    <!--<h4 class="text-danger">2020/04/13 - 2020/04/18总计:100单;牛排:1000片;损坏:100片,丢失:100;剩余:1000片</h4>-->
+
+</div>
+
+<script>
+    $(function () {
+
+        //查询对应目录下面每天出货量和剩余牛排
+        var $checkDetail = $(".check_detail");
+        for(var j=0;j<$checkDetail.length;j++){
+            if(j == 0){
+                var $curparent = $($checkDetail[0]).parent().parent();
+                var curTypeName = $($checkDetail[0]).siblings('span:first').text();
+                var prevTypeName = $curparent.prev().find("span:first").text();
+                if(!prevTypeName){prevTypeName = '2030/12/12'}
+                $.ajax({
+                    type:'post',
+                    url:"{:url('index/log')}",
+                    data:{curTypeName:curTypeName,prevTypeName:prevTypeName},
+                    dataType:'json',
+                    success:function (data) {
+                        var html = '';
+                        switch (data.status) {
+                            case 1:
+                                html += "<table class='table'>";
+                                html += "<tr class='text-center btn-warning' style='font-weight: bold;'>";
+                                html += "<td>日期</td><td>订单量</td><td>牛排销量(片)</td><td>剩余牛排(片)</td>";
+                                html += "</tr>";
+                                $(data.countepecs).each(function (i,item) {
+                                    html += "<tr class='text-center'>";
+                                    html += "<td style='text-align: center;'>"+ item['type_name'] +"</td>";
+                                    html += "<td style='text-align: center;' class='totalorder'>"+ item['countId'] +"单</td>";
+                                    html += "<td style='text-align: center;' class='totalepecs'>"+ item['epecs'] +"片</td>";
+                                    html += "<td style='color: blue;' class='remainepecs'>片</td>";
+                                    html += "</tr>";
+                                });
+                                html += "<tfoot>";
+                                html += "<tr class='text-center' style='font-weight: bold; color: red;'>";
+                                html += "<td>总计</td>";
+                                html += "<td>订单</td>";
+                                html += "<td>片牛排</td>";
+                                html += "<td></td>";
+                                html += "</tr>";
+                                html += "</tfoot>";
+                                html += "</table>";
+                                $curparent.children('div:first').html(html);
+                                funTotal($curparent);
+                        }
+                    }
+                })
+            }
+            $($checkDetail[j]).click(function () {
+                var buttonText = $(this).text();
+                var $curparent = $(this).parent().parent();
+                if(buttonText == "查看详情"){
+                    var curTypeName = $(this).siblings('span:first').text();
+                    var prevTypeName = $curparent.prev().find("span:first").text();
+                    if(!prevTypeName){prevTypeName = '2030/12/12'}
+                    $.ajax({
+                        type:'post',
+                        url:"{:url('index/log')}",
+                        data:{curTypeName:curTypeName,prevTypeName:prevTypeName},
+                        dataType:'json',
+                        success:function (data) {
+                            var html = '';
+                            switch (data.status) {
+                                case 1:
+                                    html += "<table class='table'>";
+                                    html += "<tr class='text-center btn-warning' style='font-weight: bold;'>";
+                                    html += "<td>日期</td><td>订单量</td><td>牛排销量(片)</td><td>剩余牛排(片)</td>";
+                                    html += "</tr>";
+                                    $(data.countepecs).each(function (i,item) {
+                                        html += "<tr class='text-center'>";
+                                        html += "<td style='text-align: center;'>"+ item['type_name'] +"</td>";
+                                        html += "<td style='text-align: center;' class='totalorder'>"+ item['countId'] +"单</td>";
+                                        html += "<td style='text-align: center;' class='totalepecs'>"+ item['epecs'] +"片</td>";
+                                        html += "<td style='color: blue;' class='remainepecs'>片</td>";
+                                        html += "</tr>";
+                                    });
+                                    html += "<tfoot>";
+                                    html += "<tr class='text-center' style='font-weight: bold; color: red;'>";
+                                    html += "<td>总计</td>";
+                                    html += "<td>订单</td>";
+                                    html += "<td>片牛排</td>";
+                                    html += "<td></td>";
+                                    html += "</tr>";
+                                    html += "</tfoot>";
+                                    html += "</table>";
+                                    $curparent.children('div:first').html(html);
+                                    funTotal($curparent);
+                            }
+                        }
+                    })
+
+                }else{
+                    $(this).text("查看详情");
+                    $curparent.find("div:first").html('');
+                }
+            });
+        }
+
+        //更新剩余的牛排函数
+        var funTotal = function($curparent){
+            var total = parseInt($curparent.find('button:first').text()) + parseInt($curparent.find('button:eq(1)').text());
+            var s = 0;
+            $totalOrder = $curparent.find('.totalorder');
+            $totalEpecs = $curparent.find('.totalepecs');
+            $remainEpecs = $curparent.find('.remainepecs');
+            for(var i=0;i<$totalEpecs.length;i++){
+                s += parseInt($($totalEpecs[i]).text());
+                $remainEpecs[i].innerText = total-s + '片';
+            }
+            var totalorder = 0;
+            $totalOrder.each(function () {
+                totalorder += parseInt(this.innerText);
+            });
+            var totalepecs = 0;
+            $totalEpecs.each(function () {
+                totalepecs += parseInt(this.innerText);
+            });
+            $curparent.find('tfoot td:eq(1)').text(totalorder + "个订单");
+            $curparent.find('tfoot td:eq(2)').text(totalepecs + "片订单");
+            $curparent.find('button:eq(2)').text("点击关闭");
+        };
+
+        //进货记录添加
+        $("#addlog").click(function () {
+            var remainepecs = parseInt($('table:first .remainepecs:first').text());
+            var newDate = new Date();
+            var month = ('0'+ (newDate.getMonth()+1)).slice(-2);
+            var type_name = newDate.getFullYear()+'/'+month+'/'+newDate.getDate();
+            var html ='';
+            html += "<p><span class='col-md-5 text-right'>进货量:</span><input style='padding-left:5px;width: 60px;' type='text'>&nbsp;片</p>";
+            html += "<p><span class='col-md-5 text-right'>上次剩余:</span><input style='padding-left:5px;width: 60px;' type='text' value='"+ remainepecs +"'>&nbsp;片</p>";
+            html += "<p><span class='col-md-5 text-right'>损坏:</span><input style='padding-left:5px;width: 60px;' type='text' value='0'>&nbsp;片</p>";
+            html += "<p><span class='col-md-5 text-right'>丢失:</span><input style='padding-left:5px;width: 60px;' type='text' value='0'>&nbsp;片</p>";
+            html += "<p><b class='col-md-5 text-right'>日期目录</b><input style='padding-left:5px;width: 90px;' type='text' value="+ type_name +"></p>";
+            html += "<p class='text-center' style='margin-top: 30px;'><button class='btn btn-danger'>确认添加</button>";
+            layer.open({
+                title:'牛排入库添加',
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['320px', '350px'], //宽高
+                content: "<div style='padding: 20px;'>" + html +"</div>"
+            });
+            $("button").click(function () {
+                var $curparent = $(this).parent().parent();
+                var epecs = $curparent.find("input:first").val();
+                if(epecs==0){
+                    layer.msg('进货数量不能为空');
+                    return false;
+                }
+                var prev = $curparent.find("input:eq(1)").val();
+                var destory = $curparent.find("input:eq(2)").val();
+                var lost = $curparent.find("input:eq(3)").val();
+                var type_name = $curparent.find("input:eq(4)").val();
+                $.ajax({
+                    type:'post',
+                    url:"{:url('index/addlog')}",
+                    data:{"epecs":epecs,"prev":prev,"destory":destory,"lost":lost,"type_name":type_name},
+                    dataType:'json',
+                    success:function (data) {
+                        layer.msg(data.msg,function () {
+                            location.href="{:url('index/log')}";
+                        });
+
+                    }
+                })
+            })
+        });
+
+
+
+    })
+</script>

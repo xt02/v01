@@ -1,11 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="apple-touch-fullscreen">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="720" name="MobileOptimized">
+    <meta content="telephone=no" name="format-detection">
+    {load href="/static/index/index.css" /}
+    {load href="/static/css/bootstrap.css" /}
+    {load href="/static/js/jquery-3.3.1.min.js" /}
+    {load href="/static/js/layer.js" /}
+    {load href="/static/js/bootstrap.min.js" /}
+    <title>{$title|default="古筝速成教材线上一对一指导学习"}</title>
 </head>
 <body>
+<div class="wpr"  style="background-color:#fff">
 
+    <video src="{$sinaUrl}" controls style="width:100%;" id="video" poster="https://img.alicdn.com/imgextra/i1/410729111/O1CN0158yZdB2HAt7fnmiEM_!!410729111.jpg"></video>
+
+    <div>
+        <ul class="list-group list-inline text-center course-tab" style="background-color:#c7ddef;padding: 1em;margin-left: 0;border-bottom: 2px solid #9d9d9d;cursor: pointer;">
+            <li>课程目录</li>
+            <li class="selected">详细目录</li>
+            <li>学习计划</li>
+        </ul>
+    </div>
+    <div class="js-tab" style="display:none;">
+        <div style="width: 95%; margin: 0 auto;">
+            {volist name="catList" id="cat" empty="没有内容"}
+            <div style="line-height: 36px;"><span class="glyphicon glyphicon-expand" style="color: #999999;"></span>&nbsp;&nbsp;&nbsp;<a href="{:url('index/index',['catid'=>$cat.id])}" style="color: #999999;text-decoration: none;"> {$cat.name}</a>    <span style="float: right;">课程简介</span> <br></div>
+            {/volist}
+        </div>
+    </div>
+
+    <div class="js-tab" style="display: block;">
+        {empty name="chapList"}
+        <div style="width: 95%; margin: 0 auto;">
+            <div style="line-height: 36px;"><span class="glyphicon glyphicon-expand" style="color: #999999;"></span>&nbsp;&nbsp;&nbsp;第一节：古筝的魅力    <span style="float: right;">学习内容</span> <br></div>
+            <div style="line-height: 36px;"><span class="glyphicon glyphicon-expand" style="color: #999999;"></span>&nbsp;&nbsp;&nbsp;第二节：基础常识    <span style="float: right;">学习内容</span><br></div>
+            <div style="line-height: 36px;"><span class="glyphicon glyphicon-expand" style="color: #999999;"></span>&nbsp;&nbsp;&nbsp;第三节：勾、抹、托技法学习    <span style="float: right;">学习内容</span><br></div>
+            <div style="line-height: 36px;"><span class="glyphicon glyphicon-expand" style="color: #999999;"></span>&nbsp;&nbsp;&nbsp;第四节：《沧海一声笑》讲解    <span style="float: right;">学习内容</span><br></div>
+        </div>
+        {else/}
+        <h4><b>{$chapList.0.cat_id | getCatName}&nbsp;&nbsp;&nbsp;&nbsp;[共{$chapList|count}节课]</b></h4>
+        {volist name="chapList" id="chap"}
+        <div style="line-height: 36px; width: 95%;margin: 0 auto;"><span class="glyphicon glyphicon-expand" style="color: #999999;"></span>&nbsp;&nbsp;&nbsp;<a
+                href="{:url('index/index',['catid'=>$chap.cat_id,'id'=>$chap.id])}" style="text-decoration: none;color:#b92c28;
+            {eq name="$chap.id" value="$Request.param.id"}
+            font-weight: bold;color: red;
+            {/eq}
+            ">{$chap.title}</a>    <span style="float: right;">学习内容</span><br></div>
+        {/volist}
+        {/empty}
+    </div>
+
+</div>
+
+<script>
+    $(".course-tab").on("click", 'li', function() {
+        var $currItem = $(this),
+            index = $currItem.index();
+        $currItem.addClass('selected').siblings().removeClass('selected');
+        $(".js-tab").hide().eq(index).show();
+    });
+</script>
+
+<script   >
+    var ram=document.getElementsByTagName("iframe");
+    ram[0].style.width="100%";
+    var mwidth=ram[0].offsetWidth;
+    ram[0].style.height=mwidth*0.56+ "px";
+</script>
 
 </body>
 </html>
+
